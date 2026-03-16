@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoelStudio — Architecture & Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0a0a0a;
+    --surface: #1c1c1c;
+    --border:  #2c2c2d;
+    --dim:     #4a4a4a;
+    --white:   #f0f0f0;
+    --casper:  #b0b4ca;
+    --dove:    #6b6b6c;
+    --hover:   #1a3858;
+    --active:  #1c4860;
+    --accent:  #3a4a5a;
+    --ease:    cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  /* ── Canvas ── */
+  #hero-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  /* ── Gradient vignette over canvas ── */
+  #vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 80% at 20% 50%, rgba(10,10,10,0.85) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 0% 50%, rgba(10,10,10,0.95) 0%, transparent 60%);
+  }
+
+  /* ── Grain texture overlay ── */
+  #grain {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* ── UI Layer ── */
+  #ui {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    border-bottom: 1px solid rgba(44, 44, 45, 0.6);
+    pointer-events: all;
+
+    opacity: 0;
+    transform: translateY(-8px);
+    animation: fadeUp 0.7s var(--ease) 0.1s forwards;
+  }
+
+  .nav-wordmark {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dove);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .nav-links a:hover { color: var(--casper); }
+  .nav-links a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+    color: var(--casper);
+  }
+
+  /* ── Hero content ── */
+  .hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 48px 80px;
+    max-width: 680px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dove);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.7s var(--ease) 0.55s forwards;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--dim);
+    flex-shrink: 0;
+  }
+
+  .hero-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 5.2vw, 80px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 32px;
+
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.85s var(--ease) 0.75s forwards;
+  }
+
+  .hero-headline em {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .hero-sub {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--casper);
+    max-width: 440px;
+    margin-bottom: 48px;
+
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.7s var(--ease) 1s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    pointer-events: all;
+
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.65s var(--ease) 1.2s forwards;
+  }
+
+  .btn-primary {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid var(--accent);
+    padding: 13px 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease,
+      color 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--hover);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    border-color: var(--casper);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:hover::after { opacity: 1; }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--casper);
+    outline-offset: 3px;
+    border-color: var(--casper);
+  }
+
+  .btn-primary:active {
+    background: var(--active);
+    border-color: var(--active);
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-primary:active::after { opacity: 0; }
+
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-ghost {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dove);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s ease, gap 0.2s var(--ease);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .btn-ghost:hover { color: var(--casper); gap: 12px; }
+
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+    color: var(--casper);
+  }
+
+  .btn-ghost svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s var(--ease);
+  }
+
+  .btn-ghost:hover svg { transform: translateX(3px); }
+
+  /* ── Footer row ── */
+  .hero-footer {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    border-top: 1px solid rgba(44, 44, 45, 0.4);
+
+    opacity: 0;
+    animation: fadeUp 0.6s var(--ease) 1.5s forwards;
+  }
+
+  .hero-footer-left {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dove);
+  }
+
+  .scroll-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dove);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--casper);
+    animation: scrollDrop 1.8s ease-in-out 2s infinite;
+  }
+
+  /* ── Keyframes ── */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollDrop {
+    0%   { top: -100%; }
+    50%  { top: 100%; }
+    100% { top: 100%; }
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+
+    .hero-content {
+      padding: 0 24px 60px;
+      max-width: 100%;
+      justify-content: flex-end;
+    }
+
+    .hero-headline { font-size: clamp(38px, 10vw, 56px); }
+    .hero-sub { font-size: 14px; max-width: 100%; }
+
+    .hero-footer { padding: 0 24px; }
+    .scroll-indicator { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<div id="ui">
+  <nav>
+    <a href="#" class="nav-wordmark">GoelStudio</a>
+    <ul class="nav-links">
+      <li><a href="#">Work</a></li>
+      <li><a href="#">Practice</a></li>
+      <li><a href="#">Process</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Architecture &amp; Design Practice</p>
+
+    <h1 class="hero-headline">
+      Space is a medium.<br>
+      <em>Use it deliberately.</em>
+    </h1>
+
+    <p class="hero-sub">
+      GoelStudio designs buildings, interiors, and urban environments
+      with structural rigor and compositional intent — from the first
+      sketch to the final detail.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#" class="btn-primary"><span>View Selected Work</span></a>
+      <a href="#" class="btn-ghost">
+        Our Practice
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 7h12M8 3l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-footer">
+    <span class="hero-footer-left">Est. 2026 &nbsp;·&nbsp; Design with Direction and Purpose</span>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+const BG         = new THREE.Color(0x0a0a0a);
+const C_EDGE     = new THREE.Color(0x606060);
+const C_DIM      = new THREE.Color(0x383838);
+const C_FAINT    = new THREE.Color(0x252525);
+const C_ACCENT   = new THREE.Color(0x7a9aba);
+
+// ── Renderer ──────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('hero-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(BG, 1);
+
+// ── Scene ─────────────────────────────────────────────────────────────────────
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0a0a, 0.028);
+
+// ── Camera ────────────────────────────────────────────────────────────────────
+const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
+camera.position.set(4, 20, 22);
+camera.lookAt(1, 0, 0);
+
+// ── Resize ────────────────────────────────────────────────────────────────────
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  // Shift camera on mobile
+  if (w < 768) {
+    camera.position.set(0, 20, 22);
+    camera.lookAt(0, 0, 0);
+  } else {
+    camera.position.set(4, 20, 22);
+    camera.lookAt(1, 0, 0);
+  }
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function makeEdges(geo, color, opacity = 1) {
+  const edges = new THREE.EdgesGeometry(geo);
+  const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
+  const lines = new THREE.LineSegments(edges, mat);
+  edges.setDrawRange(0, 0); // start invisible for entrance
+  return lines;
+}
+
+// ── City Data ─────────────────────────────────────────────────────────────────
+// [x, z, w, d, h, delay_ms]
+const BLOCKS = [
+  // Landmark tower — center, tallest, first
+  [ 0,   0,  2,   2,   20,   0   ],
+
+  // Inner ring
+  [-4,   0,  2.5, 2,   10,   300 ],
+  [ 4,   0,  2,   2.5, 8,    400 ],
+  [ 0,  -4,  2.5, 2,   7,    350 ],
+  [ 0,   4,  2,   2.5, 11,   250 ],
+
+  // Mid ring — varied heights for skyline rhythm
+  [-6,  -4,  3,   2,   6,    600 ],
+  [-4,  -6,  2,   3,   9,    700 ],
+  [ 2,  -6,  3,   2,   5,    650 ],
+  [ 6,  -2,  2,   3,   13,   500 ],
+  [ 6,   2,  2.5, 2,   4,    750 ],
+  [ 4,   6,  2,   2.5, 8,    550 ],
+  [-2,   6,  3,   2,   6,    800 ],
+  [-6,   4,  2,   3,   10,   700 ],
+
+  // Outer scatter
+  [-8,   0,  1.5, 1.5, 4,    950 ],
+  [-8,  -6,  2,   2,   7,    1100],
+  [ 0,  -8,  2,   1.5, 5,    1000],
+  [ 6,  -7,  1.5, 2,   3,    1200],
+  [ 8,   4,  2,   1.5, 6,    900 ],
+  [ 3,   8,  1.5, 2,   8,    1050],
+  [-4,   8,  2,   1.5, 4,    1150],
+  [-8,   6,  1.5, 1.5, 9,    1300],
+
+  // Background filler — low opacity, very dim
+  [ 10,  2,  2,   2,   2,    1400],
+  [-10, -2,  2,   1.5, 3,    1450],
+  [ 2,  10,  1.5, 2,   2,    1500],
+  [-2, -10,  2,   1.5, 1.5,  1550],
+];
+
+// ── Build city ────────────────────────────────────────────────────────────────
+const cityGroup = new THREE.Group();
+scene.add(cityGroup);
+
+// Track each block for entrance animation
+const animObjects = [];
+
+BLOCKS.forEach(([x, z, w, d, h, delay], i) => {
+  const isLandmark = i === 0;
+  const isOuter    = i >= 21;
+  const opacity    = isLandmark ? 1.0 : isOuter ? 0.4 : 0.75;
+  const color      = isOuter ? C_DIM : isLandmark ? C_EDGE : C_EDGE;
+
+  const geo   = new THREE.BoxGeometry(w, h, d);
+  const lines = makeEdges(geo, color, opacity);
+  lines.position.set(x, h / 2, z);
+  cityGroup.add(lines);
+
+  // Add subtle floor plate for landmark
+  if (isLandmark) {
+    const platGeo = new THREE.BoxGeometry(w + 1.5, 0.15, d + 1.5);
+    const plate = makeEdges(platGeo, C_DIM, 0.4);
+    plate.position.set(x, 0.07, z);
+    cityGroup.add(plate);
+    animObjects.push({ lines: plate, delay: delay + 800, dur: 600 });
+  }
+
+  animObjects.push({ lines, delay, dur: 900 });
+});
+
+// Ground grid
+const grid = new THREE.GridHelper(36, 18, 0x1e1e1e, 0x1e1e1e);
+grid.position.y = 0;
+scene.add(grid);
+
+// Horizon plane (very faint boundary square)
+const horizonGeo = new THREE.EdgesGeometry(new THREE.PlaneGeometry(40, 40));
+const horizonMat = new THREE.LineBasicMaterial({ color: 0x1a1a1a, transparent: true, opacity: 0.4 });
+const horizon    = new THREE.LineSegments(horizonGeo, horizonMat);
+horizon.rotation.x = -Math.PI / 2;
+horizon.position.y = -0.05;
+scene.add(horizon);
+
+// ── Entrance animation ────────────────────────────────────────────────────────
+const startTime = performance.now();
+
+function updateEntrance(now) {
+  animObjects.forEach(({ lines, delay, dur }) => {
+    const elapsed = now - startTime - delay;
+    if (elapsed <= 0) return;
+
+    const count = lines.geometry.getAttribute('position').count;
+    const segments = count; // LineSegments draws 2 vertices per segment
+    const progress = Math.min(elapsed / dur, 1);
+    // Ease in-out cubic
+    const eased = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    lines.geometry.setDrawRange(0, Math.floor(eased * segments));
+  });
+}
+
+// ── Mouse parallax ────────────────────────────────────────────────────────────
+let mouseX = 0, mouseY = 0;
+let targetRotY = 0, targetRotX = 0;
+let currentRotY = 0, currentRotX = 0;
+const BASE_ROT_SPEED = 0.0018;
+let isMobile = window.innerWidth < 768;
+
+window.addEventListener('mousemove', (e) => {
+  if (isMobile) return;
+  mouseX = (e.clientX / window.innerWidth)  * 2 - 1;
+  mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+});
+
+window.addEventListener('resize', () => { isMobile = window.innerWidth < 768; });
+
+// ── Hover glow on canvas ──────────────────────────────────────────────────────
+let isHovered = false;
+const landmarkMat = animObjects[0]?.lines?.material;
+
+document.getElementById('hero-canvas').addEventListener('mouseenter', () => { isHovered = true; });
+document.getElementById('hero-canvas').addEventListener('mouseleave', () => { isHovered = false; });
+
+// ── Render loop ───────────────────────────────────────────────────────────────
+let tick = 0;
+
+renderer.setAnimationLoop((now) => {
+  tick++;
+
+  // Entrance draw-on
+  updateEntrance(now);
+
+  // Auto-rotation
+  const autoRot = (now * 0.001) * BASE_ROT_SPEED * 60;
+
+  // Mouse parallax target
+  targetRotY = autoRot + mouseX * 0.18;
+  targetRotX = mouseY * -0.08;
+
+  // Lerp toward target
+  currentRotY += (targetRotY - currentRotY) * 0.025;
+  currentRotX += (targetRotX - currentRotX) * 0.025;
+
+  cityGroup.rotation.y = currentRotY;
+  cityGroup.rotation.x = currentRotX;
+
+  // Subtle hover glow on landmark
+  if (landmarkMat) {
+    const targetOpacity = isHovered ? 1.0 : 0.9;
+    landmarkMat.opacity += (targetOpacity - landmarkMat.opacity) * 0.06;
+    const targetColor = isHovered ? C_ACCENT : C_EDGE;
+    landmarkMat.color.lerp(targetColor, 0.04);
+  }
+
+  renderer.render(scene, camera);
+});
+
+// ── Visibility pause ──────────────────────────────────────────────────────────
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) renderer.setAnimationLoop(null);
+  else renderer.setAnimationLoop((now) => {
+    tick++;
+    updateEntrance(now);
+    const autoRot = (now * 0.001) * BASE_ROT_SPEED * 60;
+    targetRotY = autoRot + mouseX * 0.18;
+    targetRotX = mouseY * -0.08;
+    currentRotY += (targetRotY - currentRotY) * 0.025;
+    currentRotX += (targetRotX - currentRotX) * 0.025;
+    cityGroup.rotation.y = currentRotY;
+    cityGroup.rotation.x = currentRotX;
+    renderer.render(scene, camera);
+  });
+});
+</script>
+
+</body>
+</html>
