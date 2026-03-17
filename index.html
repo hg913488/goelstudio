@@ -1404,20 +1404,27 @@ function setProject(index) {
     m.style.borderRight = `1px solid ${p.accent}15`;
   });
 
-  // Image
+  // Image — set onload BEFORE src to avoid mobile Safari race condition
   const img     = document.getElementById('p-image');
   const shimmer = document.getElementById('p-shimmer');
   img.style.opacity   = '0';
   img.style.transform = 'scale(1.05)';
   shimmer.style.animation = 'shimmer 1.5s infinite';
   shimmer.style.opacity = '1';
-  img.src = p.image;
-  img.onload = () => {
+
+  function revealImage() {
     shimmer.style.animation = 'none';
     shimmer.style.opacity = '0';
     img.style.opacity   = '1';
     img.style.transform = 'scale(1)';
-  };
+  }
+
+  img.onload  = revealImage;
+  img.onerror = revealImage; // show image area even if load fails
+  img.src = p.image;
+
+  // If already cached (complete before onload registered), reveal immediately
+  if (img.complete && img.naturalWidth > 0) revealImage();
 
   // Trigger entrance with slight delay
   requestAnimationFrame(() => {
