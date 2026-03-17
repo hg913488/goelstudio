@@ -5,9 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GoelStudio — Architecture & Design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    width: 100%;
+    background: #0a0a0a;
+    overflow-x: hidden;
+  }
+
+  /* ────────────────────────────────────────────────
+     HERO SECTION
+  ──────────────────────────────────────────────── */
 
   :root {
     --bg:      #0a0a0a;
@@ -23,24 +37,24 @@
     --ease:    cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  html, body {
-    width: 100%; height: 100%;
+  #hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
     background: var(--bg);
   }
 
-  /* ── Canvas ── */
   #hero-canvas {
-    position: fixed;
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     z-index: 0;
   }
 
-  /* ── Gradient vignette over canvas ── */
   #vignette {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
@@ -49,9 +63,8 @@
       radial-gradient(ellipse 40% 60% at 0% 50%, rgba(10,10,10,0.95) 0%, transparent 60%);
   }
 
-  /* ── Grain texture overlay ── */
   #grain {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 2;
     pointer-events: none;
@@ -60,9 +73,8 @@
     background-size: 200px 200px;
   }
 
-  /* ── UI Layer ── */
   #ui {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 10;
     display: flex;
@@ -70,8 +82,8 @@
     pointer-events: none;
   }
 
-  /* ── Navigation ── */
-  nav {
+  /* Navigation */
+  #hero nav {
     height: 80px;
     display: flex;
     align-items: center;
@@ -79,7 +91,6 @@
     padding: 0 48px;
     border-bottom: 1px solid rgba(44, 44, 45, 0.6);
     pointer-events: all;
-
     opacity: 0;
     transform: translateY(-8px);
     animation: fadeUp 0.7s var(--ease) 0.1s forwards;
@@ -113,6 +124,7 @@
   }
 
   .nav-links a:hover { color: var(--casper); }
+
   .nav-links a:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
@@ -120,7 +132,7 @@
     color: var(--casper);
   }
 
-  /* ── Hero content ── */
+  /* Hero content */
   .hero-content {
     flex: 1;
     display: flex;
@@ -141,7 +153,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-
     opacity: 0;
     transform: translateY(12px);
     animation: fadeUp 0.7s var(--ease) 0.55s forwards;
@@ -165,7 +176,6 @@
     letter-spacing: -0.02em;
     color: var(--white);
     margin-bottom: 32px;
-
     opacity: 0;
     transform: translateY(16px);
     animation: fadeUp 0.85s var(--ease) 0.75s forwards;
@@ -185,7 +195,6 @@
     color: var(--casper);
     max-width: 440px;
     margin-bottom: 48px;
-
     opacity: 0;
     transform: translateY(12px);
     animation: fadeUp 0.7s var(--ease) 1s forwards;
@@ -196,7 +205,6 @@
     align-items: center;
     gap: 20px;
     pointer-events: all;
-
     opacity: 0;
     transform: translateY(10px);
     animation: fadeUp 0.65s var(--ease) 1.2s forwards;
@@ -253,7 +261,6 @@
   }
 
   .btn-primary:active::after { opacity: 0; }
-
   .btn-primary span { position: relative; z-index: 1; }
 
   .btn-ghost {
@@ -291,7 +298,7 @@
 
   .btn-ghost:hover svg { transform: translateX(3px); }
 
-  /* ── Footer row ── */
+  /* Footer row */
   .hero-footer {
     height: 60px;
     display: flex;
@@ -299,7 +306,6 @@
     justify-content: space-between;
     padding: 0 48px;
     border-top: 1px solid rgba(44, 44, 45, 0.4);
-
     opacity: 0;
     animation: fadeUp 0.6s var(--ease) 1.5s forwards;
   }
@@ -323,7 +329,13 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dove);
+    text-decoration: none;
+    pointer-events: all;
+    cursor: pointer;
+    transition: color 0.15s ease;
   }
+
+  .scroll-indicator:hover { color: var(--casper); }
 
   .scroll-line {
     width: 1px;
@@ -344,7 +356,7 @@
     animation: scrollDrop 1.8s ease-in-out 2s infinite;
   }
 
-  /* ── Keyframes ── */
+  /* Keyframes */
   @keyframes fadeUp {
     to { opacity: 1; transform: translateY(0); }
   }
@@ -355,141 +367,582 @@
     100% { top: 100%; }
   }
 
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* ────────────────────────────────────────────────
+     PORTFOLIO SECTION
+  ──────────────────────────────────────────────── */
+
+  #portfolio {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    cursor: crosshair;
+    transition: background-color 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Background layer (for gradient transition) */
+  #p-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: background 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Portfolio grain */
+  .p-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Grid lines */
+  .p-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.04;
+  }
+
+  .p-grid-v, .p-grid-h {
+    position: absolute;
+    background: var(--p-accent, #b8956a);
+    transition: background 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .p-grid-v { top: 0; bottom: 0; width: 1px; }
+  .p-grid-h { left: 0; right: 0; height: 1px; }
+
+  /* Side rotated text */
+  .p-side {
+    position: absolute;
+    z-index: 20;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.2;
+    transition: color 1.2s ease;
+    top: 50%;
+    pointer-events: none;
+  }
+
+  .p-side-left {
+    left: 24px;
+    transform: translateY(-50%) rotate(-90deg);
+  }
+
+  .p-side-right {
+    right: 24px;
+    transform: translateY(-50%) rotate(90deg);
+  }
+
+  /* Header strip */
+  .p-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    mix-blend-mode: difference;
+  }
+
+  .p-wordmark {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .p-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+    transition: color 1.2s ease;
+  }
+
+  /* Main 2-col layout */
+  .p-main {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    z-index: 10;
+  }
+
+  /* Left panel */
+  .p-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 56px 100px 64px;
+    position: relative;
+  }
+
+  /* Entrance animation base */
+  .p-enter {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .p-enter.revealed { opacity: 1; transform: translateY(0); }
+
+  .p-phase {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    transition-delay: 0.1s;
+  }
+
+  .p-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(44px, 5.5vw, 82px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    transition-delay: 0.15s;
+  }
+
+  .p-subtitle {
+    font-size: clamp(15px, 1.6vw, 21px);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 36px;
+    transition-delay: 0.25s;
+  }
+
+  .p-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    display: flex;
+    gap: 28px;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.35s,
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
+  }
+
+  .p-meta.revealed { opacity: 1; transform: translateY(0); }
+
+  .p-divider {
+    height: 1px;
+    margin-bottom: 28px;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s,
+                background-color 1.2s ease;
+    width: 0;
+  }
+
+  .p-description {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.85;
+    font-weight: 300;
+    max-width: 460px;
+    transition-delay: 0.45s;
+  }
+
+  .p-description.revealed { opacity: 0.75 !important; }
+
+  /* Metrics grid */
+  .p-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 44px;
+    transition-delay: 0.55s;
+  }
+
+  .p-metrics.revealed { opacity: 1; transform: translateY(0); }
+
+  .p-metric {
+    padding: 22px 0;
+    text-align: center;
+    cursor: default;
+    transition: background 0.3s ease;
+  }
+
+  .p-metric:hover { background: var(--p-metric-hover, rgba(184,149,106,0.08)); }
+
+  .p-metric-value {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .p-metric-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* Right panel */
+  .p-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .p-image-container {
+    position: relative;
+    width: 88%;
+    max-width: 720px;
+  }
+
+  .p-img-label {
+    position: absolute;
+    top: -24px;
+    right: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.35;
+  }
+
+  .p-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    transition-delay: 0.2s !important;
+    transition-property: opacity, transform !important;
+  }
+
+  .p-image-wrap.revealed {
+    opacity: 1 !important;
+    transform: scale(1) translateX(0) !important;
+  }
+
+  .p-image-wrap:not(.revealed) {
+    transform: scale(0.96) translateX(24px);
+  }
+
+  .p-shimmer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transition: opacity 0.5s ease;
+  }
+
+  .p-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .p-img-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Corner markers */
+  .p-corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    z-index: 3;
+    transition: border-color 1.2s ease;
+  }
+
+  .p-corner.tl { top: -4px; left: -4px;   border-top: 1px solid; border-left: 1px solid; }
+  .p-corner.tr { top: -4px; right: -4px;  border-top: 1px solid; border-right: 1px solid; }
+  .p-corner.bl { bottom: -4px; left: -4px;  border-bottom: 1px solid; border-left: 1px solid; }
+  .p-corner.br { bottom: -4px; right: -4px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  /* Border on image wrap */
+  .p-image-frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+    transition: border-color 1.2s ease;
+  }
+
+  /* Navigation */
+  .p-nav-label {
+    position: absolute;
+    bottom: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.3;
+    z-index: 20;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: color 1.2s ease;
+  }
+
+  .p-nav {
+    position: absolute;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 20;
+  }
+
+  .p-dot {
+    height: 3px;
+    border-radius: 1px;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .p-arrow {
+    position: absolute;
+    bottom: 40px;
+    background: none;
+    border: 1px solid;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-family: 'DM Mono', monospace;
+    opacity: 0.5;
+    transition: opacity 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    z-index: 20;
+  }
+
+  .p-arrow:hover { opacity: 1; }
+  #p-prev { left: 48px; }
+  #p-next { right: 48px; }
+
   /* ── Mobile ── */
   @media (max-width: 768px) {
-    nav { padding: 0 24px; }
+    #hero nav { padding: 0 24px; }
     .nav-links { display: none; }
-
-    .hero-content {
-      padding: 0 24px 60px;
-      max-width: 100%;
-      justify-content: flex-end;
-    }
-
+    .hero-content { padding: 0 24px 60px; max-width: 100%; justify-content: flex-end; }
     .hero-headline { font-size: clamp(38px, 10vw, 56px); }
     .hero-sub { font-size: 14px; max-width: 100%; }
-
     .hero-footer { padding: 0 24px; }
     .scroll-indicator { display: none; }
+
+    .p-main { grid-template-columns: 1fr; }
+    .p-right { display: none; }
+    .p-left { padding: 100px 24px 120px; }
+    .p-header { padding: 20px 24px; }
+    .p-side { display: none; }
+    #p-prev { left: 24px; }
+    #p-next { right: 24px; }
   }
 </style>
 </head>
 <body>
 
-<canvas id="hero-canvas"></canvas>
-<div id="vignette"></div>
-<div id="grain"></div>
+<!-- ════════════════════════════════════════════════
+     HERO SECTION — Three.js Urban Fragment wireframe
+═════════════════════════════════════════════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div id="vignette"></div>
+  <div id="grain"></div>
 
-<div id="ui">
-  <nav>
-    <a href="#" class="nav-wordmark">GoelStudio</a>
-    <ul class="nav-links">
-      <li><a href="#">Work</a></li>
-      <li><a href="#">Practice</a></li>
-      <li><a href="#">Process</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-  </nav>
+  <div id="ui">
+    <nav>
+      <a href="#" class="nav-wordmark">GoelStudio</a>
+      <ul class="nav-links">
+        <li><a href="#portfolio">Work</a></li>
+        <li><a href="#">Practice</a></li>
+        <li><a href="#">Process</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
 
-  <div class="hero-content">
-    <p class="hero-eyebrow">Architecture &amp; Design Practice</p>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Architecture &amp; Design Practice</p>
 
-    <h1 class="hero-headline">
-      Space is a medium.<br>
-      <em>Use it deliberately.</em>
-    </h1>
+      <h1 class="hero-headline">
+        Space is a medium.<br>
+        <em>Use it deliberately.</em>
+      </h1>
 
-    <p class="hero-sub">
-      GoelStudio designs buildings, interiors, and urban environments
-      with structural rigor and compositional intent — from the first
-      sketch to the final detail.
-    </p>
+      <p class="hero-sub">
+        GoelStudio designs buildings, interiors, and urban environments
+        with structural rigor and compositional intent — from the first
+        sketch to the final detail.
+      </p>
 
-    <div class="hero-actions">
-      <a href="#" class="btn-primary"><span>View Selected Work</span></a>
-      <a href="#" class="btn-ghost">
-        Our Practice
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M1 7h12M8 3l4 4-4 4"/>
-        </svg>
+      <div class="hero-actions">
+        <a href="#portfolio" class="btn-primary"><span>View Selected Work</span></a>
+        <a href="#" class="btn-ghost">
+          Our Practice
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M1 7h12M8 3l4 4-4 4"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-footer">
+      <span class="hero-footer-left">Est. 2026 &nbsp;·&nbsp; Design with Direction and Purpose</span>
+      <a href="#portfolio" class="scroll-indicator">
+        <div class="scroll-line"></div>
+        Scroll
       </a>
     </div>
   </div>
+</section>
 
-  <div class="hero-footer">
-    <span class="hero-footer-left">Est. 2026 &nbsp;·&nbsp; Design with Direction and Purpose</span>
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
-      Scroll
-    </div>
-  </div>
-</div>
+<!-- ════════════════════════════════════════════════
+     PORTFOLIO SECTION — 8 Real Projects
+═════════════════════════════════════════════════ -->
+<section id="portfolio">
+  <div id="p-bg"></div>
+  <div class="p-grain"></div>
 
+  <!-- Grid lines (rendered via JS) -->
+  <div class="p-grid" id="p-grid"></div>
+
+  <!-- Rotated side labels -->
+  <div class="p-side p-side-left">Selected Works — Portfolio</div>
+  <div class="p-side p-side-right" id="p-side-right">Toronto, ON — 2024</div>
+
+  <!-- Header -->
+  <header class="p-header">
+    <div class="p-wordmark">GoelStudio</div>
+    <div class="p-counter" id="p-counter">01 / 08</div>
+  </header>
+
+  <!-- Main content grid -->
+  <main class="p-main">
+    <!-- Left: Project info -->
+    <section class="p-left">
+      <div class="p-phase p-enter" id="p-phase">Design Development</div>
+      <h2 class="p-title p-enter" id="p-title">2-4 Union</h2>
+      <p class="p-subtitle p-enter" id="p-subtitle">Mixed-Use Tower — High-Rise Residential</p>
+      <div class="p-meta" id="p-meta">
+        <span id="p-location">Toronto, ON</span>
+        <span id="p-year">2024</span>
+      </div>
+      <div class="p-divider" id="p-divider"></div>
+      <p class="p-description p-enter" id="p-description">Loading…</p>
+      <div class="p-metrics p-enter" id="p-metrics"></div>
+    </section>
+
+    <!-- Right: Image -->
+    <section class="p-right">
+      <div class="p-image-container">
+        <span class="p-img-label" id="p-img-label">Exterior Rendering</span>
+        <div class="p-image-wrap p-enter" id="p-image-wrap">
+          <div class="p-corner tl" id="p-corner-tl"></div>
+          <div class="p-corner tr" id="p-corner-tr"></div>
+          <div class="p-corner bl" id="p-corner-bl"></div>
+          <div class="p-corner br" id="p-corner-br"></div>
+          <div class="p-shimmer" id="p-shimmer"></div>
+          <img class="p-img" id="p-image" src="" alt="">
+          <div class="p-img-vignette" id="p-img-vignette"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Nav label -->
+  <div class="p-nav-label" id="p-nav-label">Navigate Projects</div>
+
+  <!-- Navigation -->
+  <nav class="p-nav" id="p-nav">
+    <button class="p-arrow" id="p-prev" aria-label="Previous project">&#8592;</button>
+    <div id="p-dots" style="display:flex; gap:12px; align-items:center;"></div>
+    <button class="p-arrow" id="p-next" aria-label="Next project">&#8594;</button>
+  </nav>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SCRIPTS
+═════════════════════════════════════════════════ -->
 <script type="module">
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
-// ── Constants ─────────────────────────────────────────────────────────────────
-const BG         = new THREE.Color(0x0a0a0a);
-const C_EDGE     = new THREE.Color(0x606060);
-const C_DIM      = new THREE.Color(0x383838);
-const C_FAINT    = new THREE.Color(0x252525);
-const C_ACCENT   = new THREE.Color(0x7a9aba);
+// ══════════════════════════════════════════════════
+// THREE.JS HERO — Urban Fragment wireframe
+// ══════════════════════════════════════════════════
 
-// ── Renderer ──────────────────────────────────────────────────────────────────
-const canvas = document.getElementById('hero-canvas');
+const BG       = new THREE.Color(0x0a0a0a);
+const C_EDGE   = new THREE.Color(0x606060);
+const C_DIM    = new THREE.Color(0x383838);
+const C_ACCENT = new THREE.Color(0x7a9aba);
+
+const canvas   = document.getElementById('hero-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(BG, 1);
 
-// ── Scene ─────────────────────────────────────────────────────────────────────
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x0a0a0a, 0.028);
 
-// ── Camera ────────────────────────────────────────────────────────────────────
 const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
-camera.position.set(4, 20, 22);
-camera.lookAt(1, 0, 0);
 
-// ── Resize ────────────────────────────────────────────────────────────────────
-function resize() {
+function resizeHero() {
   const w = window.innerWidth, h = window.innerHeight;
   renderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  // Shift camera on mobile
-  if (w < 768) {
-    camera.position.set(0, 20, 22);
-    camera.lookAt(0, 0, 0);
-  } else {
-    camera.position.set(4, 20, 22);
-    camera.lookAt(1, 0, 0);
-  }
+  if (w < 768) { camera.position.set(0, 20, 22); camera.lookAt(0, 0, 0); }
+  else          { camera.position.set(4, 20, 22); camera.lookAt(1, 0, 0); }
 }
-window.addEventListener('resize', resize);
-resize();
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+window.addEventListener('resize', resizeHero);
+resizeHero();
+
 function makeEdges(geo, color, opacity = 1) {
   const edges = new THREE.EdgesGeometry(geo);
-  const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
+  const mat   = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
   const lines = new THREE.LineSegments(edges, mat);
-  edges.setDrawRange(0, 0); // start invisible for entrance
+  edges.setDrawRange(0, 0);
   return lines;
 }
 
-// ── City Data ─────────────────────────────────────────────────────────────────
-// [x, z, w, d, h, delay_ms]
 const BLOCKS = [
-  // Landmark tower — center, tallest, first
   [ 0,   0,  2,   2,   20,   0   ],
-
-  // Inner ring
   [-4,   0,  2.5, 2,   10,   300 ],
   [ 4,   0,  2,   2.5, 8,    400 ],
   [ 0,  -4,  2.5, 2,   7,    350 ],
   [ 0,   4,  2,   2.5, 11,   250 ],
-
-  // Mid ring — varied heights for skyline rhythm
   [-6,  -4,  3,   2,   6,    600 ],
   [-4,  -6,  2,   3,   9,    700 ],
   [ 2,  -6,  3,   2,   5,    650 ],
@@ -498,8 +951,6 @@ const BLOCKS = [
   [ 4,   6,  2,   2.5, 8,    550 ],
   [-2,   6,  3,   2,   6,    800 ],
   [-6,   4,  2,   3,   10,   700 ],
-
-  // Outer scatter
   [-8,   0,  1.5, 1.5, 4,    950 ],
   [-8,  -6,  2,   2,   7,    1100],
   [ 0,  -8,  2,   1.5, 5,    1000],
@@ -508,36 +959,29 @@ const BLOCKS = [
   [ 3,   8,  1.5, 2,   8,    1050],
   [-4,   8,  2,   1.5, 4,    1150],
   [-8,   6,  1.5, 1.5, 9,    1300],
-
-  // Background filler — low opacity, very dim
   [ 10,  2,  2,   2,   2,    1400],
   [-10, -2,  2,   1.5, 3,    1450],
   [ 2,  10,  1.5, 2,   2,    1500],
   [-2, -10,  2,   1.5, 1.5,  1550],
 ];
 
-// ── Build city ────────────────────────────────────────────────────────────────
-const cityGroup = new THREE.Group();
+const cityGroup  = new THREE.Group();
 scene.add(cityGroup);
-
-// Track each block for entrance animation
 const animObjects = [];
 
 BLOCKS.forEach(([x, z, w, d, h, delay], i) => {
   const isLandmark = i === 0;
   const isOuter    = i >= 21;
   const opacity    = isLandmark ? 1.0 : isOuter ? 0.4 : 0.75;
-  const color      = isOuter ? C_DIM : isLandmark ? C_EDGE : C_EDGE;
-
-  const geo   = new THREE.BoxGeometry(w, h, d);
-  const lines = makeEdges(geo, color, opacity);
+  const color      = isOuter ? C_DIM : C_EDGE;
+  const geo        = new THREE.BoxGeometry(w, h, d);
+  const lines      = makeEdges(geo, color, opacity);
   lines.position.set(x, h / 2, z);
   cityGroup.add(lines);
 
-  // Add subtle floor plate for landmark
   if (isLandmark) {
     const platGeo = new THREE.BoxGeometry(w + 1.5, 0.15, d + 1.5);
-    const plate = makeEdges(platGeo, C_DIM, 0.4);
+    const plate   = makeEdges(platGeo, C_DIM, 0.4);
     plate.position.set(x, 0.07, z);
     cityGroup.add(plate);
     animObjects.push({ lines: plate, delay: delay + 800, dur: 600 });
@@ -546,12 +990,9 @@ BLOCKS.forEach(([x, z, w, d, h, delay], i) => {
   animObjects.push({ lines, delay, dur: 900 });
 });
 
-// Ground grid
 const grid = new THREE.GridHelper(36, 18, 0x1e1e1e, 0x1e1e1e);
-grid.position.y = 0;
 scene.add(grid);
 
-// Horizon plane (very faint boundary square)
 const horizonGeo = new THREE.EdgesGeometry(new THREE.PlaneGeometry(40, 40));
 const horizonMat = new THREE.LineBasicMaterial({ color: 0x1a1a1a, transparent: true, opacity: 0.4 });
 const horizon    = new THREE.LineSegments(horizonGeo, horizonMat);
@@ -559,27 +1000,21 @@ horizon.rotation.x = -Math.PI / 2;
 horizon.position.y = -0.05;
 scene.add(horizon);
 
-// ── Entrance animation ────────────────────────────────────────────────────────
 const startTime = performance.now();
 
 function updateEntrance(now) {
   animObjects.forEach(({ lines, delay, dur }) => {
-    const elapsed = now - startTime - delay;
+    const elapsed  = now - startTime - delay;
     if (elapsed <= 0) return;
-
-    const count = lines.geometry.getAttribute('position').count;
-    const segments = count; // LineSegments draws 2 vertices per segment
+    const count    = lines.geometry.getAttribute('position').count;
     const progress = Math.min(elapsed / dur, 1);
-    // Ease in-out cubic
-    const eased = progress < 0.5
+    const eased    = progress < 0.5
       ? 4 * progress * progress * progress
       : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-    lines.geometry.setDrawRange(0, Math.floor(eased * segments));
+    lines.geometry.setDrawRange(0, Math.floor(eased * count));
   });
 }
 
-// ── Mouse parallax ────────────────────────────────────────────────────────────
 let mouseX = 0, mouseY = 0;
 let targetRotY = 0, targetRotX = 0;
 let currentRotY = 0, currentRotX = 0;
@@ -591,66 +1026,478 @@ window.addEventListener('mousemove', (e) => {
   mouseX = (e.clientX / window.innerWidth)  * 2 - 1;
   mouseY = (e.clientY / window.innerHeight) * 2 - 1;
 });
-
 window.addEventListener('resize', () => { isMobile = window.innerWidth < 768; });
 
-// ── Hover glow on canvas ──────────────────────────────────────────────────────
-let isHovered = false;
+let isHeroHovered = false;
 const landmarkMat = animObjects[0]?.lines?.material;
+canvas.addEventListener('mouseenter', () => { isHeroHovered = true; });
+canvas.addEventListener('mouseleave', () => { isHeroHovered = false; });
 
-document.getElementById('hero-canvas').addEventListener('mouseenter', () => { isHovered = true; });
-document.getElementById('hero-canvas').addEventListener('mouseleave', () => { isHovered = false; });
+// Pause when hero is not visible (IntersectionObserver)
+let heroVisible = true;
+new IntersectionObserver((entries) => {
+  heroVisible = entries[0].isIntersecting;
+}, { threshold: 0.01 }).observe(document.getElementById('hero'));
 
-// ── Render loop ───────────────────────────────────────────────────────────────
-let tick = 0;
-
-renderer.setAnimationLoop((now) => {
-  tick++;
-
-  // Entrance draw-on
+function heroLoop(now) {
   updateEntrance(now);
-
-  // Auto-rotation
-  const autoRot = (now * 0.001) * BASE_ROT_SPEED * 60;
-
-  // Mouse parallax target
-  targetRotY = autoRot + mouseX * 0.18;
-  targetRotX = mouseY * -0.08;
-
-  // Lerp toward target
-  currentRotY += (targetRotY - currentRotY) * 0.025;
-  currentRotX += (targetRotX - currentRotX) * 0.025;
-
+  const autoRot  = (now * 0.001) * BASE_ROT_SPEED * 60;
+  targetRotY     = autoRot + mouseX * 0.18;
+  targetRotX     = mouseY * -0.08;
+  currentRotY   += (targetRotY - currentRotY) * 0.025;
+  currentRotX   += (targetRotX - currentRotX) * 0.025;
   cityGroup.rotation.y = currentRotY;
   cityGroup.rotation.x = currentRotX;
-
-  // Subtle hover glow on landmark
   if (landmarkMat) {
-    const targetOpacity = isHovered ? 1.0 : 0.9;
+    const targetOpacity = isHeroHovered ? 1.0 : 0.9;
     landmarkMat.opacity += (targetOpacity - landmarkMat.opacity) * 0.06;
-    const targetColor = isHovered ? C_ACCENT : C_EDGE;
+    const targetColor = isHeroHovered ? C_ACCENT : C_EDGE;
     landmarkMat.color.lerp(targetColor, 0.04);
   }
-
   renderer.render(scene, camera);
+}
+
+renderer.setAnimationLoop((now) => {
+  if (heroVisible) heroLoop(now);
 });
 
-// ── Visibility pause ──────────────────────────────────────────────────────────
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) renderer.setAnimationLoop(null);
-  else renderer.setAnimationLoop((now) => {
-    tick++;
-    updateEntrance(now);
-    const autoRot = (now * 0.001) * BASE_ROT_SPEED * 60;
-    targetRotY = autoRot + mouseX * 0.18;
-    targetRotX = mouseY * -0.08;
-    currentRotY += (targetRotY - currentRotY) * 0.025;
-    currentRotX += (targetRotX - currentRotX) * 0.025;
-    cityGroup.rotation.y = currentRotY;
-    cityGroup.rotation.x = currentRotX;
-    renderer.render(scene, camera);
-  });
+  else renderer.setAnimationLoop((now) => { if (heroVisible) heroLoop(now); });
 });
+
+
+// ══════════════════════════════════════════════════
+// PORTFOLIO — 8 real projects
+// ══════════════════════════════════════════════════
+
+const PROJECTS = [
+  {
+    id: 1,
+    title: "2-4 Union",
+    subtitle: "Mixed-Use Tower",
+    location: "Toronto, ON",
+    year: "2024",
+    phase: "Design Development",
+    typology: "High-Rise Residential",
+    description: "A sculpted residential tower rising from a transit-adjacent site. The faceted curtain wall catches light dynamically across the day, while a commercial podium anchors the building to the streetscape with active frontage and generous pedestrian realm.",
+    metrics: [
+      { label: "Type",     value: "High-Rise" },
+      { label: "Use",      value: "Mixed"     },
+      { label: "Phase",    value: "DD"        },
+      { label: "Location", value: "Toronto"   },
+    ],
+    image:   "images/2-4union02.png",
+    palette: ["#141a24", "#e2d5c3", "#b8956a", "#1e2530"],
+    accent:  "#b8956a",
+  },
+  {
+    id: 2,
+    title: "8 Mile Road",
+    subtitle: "Custom Residence",
+    location: "Ontario",
+    year: "2023",
+    phase: "Construction",
+    typology: "Single-Family Residential",
+    description: "A contemporary farmhouse composed of interlocking gabled volumes with standing-seam metal roofing and warm timber cladding. A central stone chimney anchors the composition, while generous glazing dissolves the boundary between interior and landscape.",
+    metrics: [
+      { label: "Type",  value: "Custom"      },
+      { label: "Use",   value: "Residential" },
+      { label: "Phase", value: "CA"          },
+      { label: "Style", value: "Modern"      },
+    ],
+    image:   "images/8mileroad.jpg",
+    palette: ["#1a2218", "#ddd5c4", "#7a8b55", "#2a3328"],
+    accent:  "#7a8b55",
+  },
+  {
+    id: 3,
+    title: "126 Union",
+    subtitle: "Master Plan",
+    location: "Toronto, ON",
+    year: "2024",
+    phase: "Approvals",
+    typology: "High-Rise Mixed-Use",
+    description: "A two-tower residential development set within a tree-lined urban boulevard. The towers are differentiated in height and massing to create a dynamic skyline profile, unified by a shared podium with retail frontage and landscaped public realm.",
+    metrics: [
+      { label: "Type",     value: "High-Rise" },
+      { label: "Towers",   value: "2"         },
+      { label: "Phase",    value: "SPA"       },
+      { label: "Location", value: "Toronto"   },
+    ],
+    image:   "images/126Union02.jpg",
+    palette: ["#161c28", "#d4cfc8", "#6b7fa0", "#1e2636"],
+    accent:  "#6b7fa0",
+  },
+  {
+    id: 4,
+    title: "1055 Bloor",
+    subtitle: "Mid-Rise Residential",
+    location: "Toronto, ON",
+    year: "2024",
+    phase: "Design Development",
+    typology: "Mid-Rise Residential + Commercial",
+    description: "A contemporary mid-rise building with a composed facade of grey and charcoal panelling, punched balconies, and warm wood accent soffits at grade. The massing steps back at upper floors and activates the street corner with transparent commercial frontage.",
+    metrics: [
+      { label: "Type",    value: "Mid-Rise" },
+      { label: "Storeys", value: "6"        },
+      { label: "Phase",   value: "DD"       },
+      { label: "Use",     value: "Mixed"    },
+    ],
+    image:   "images/1055-01.jpg",
+    palette: ["#1a1c22", "#d8d0c6", "#8a8a98", "#26282e"],
+    accent:  "#8a8a98",
+  },
+  {
+    id: 5,
+    title: "Fieldway",
+    subtitle: "Tower Cluster",
+    location: "Toronto, ON",
+    year: "2025",
+    phase: "Schematic Design",
+    typology: "High-Rise Master Plan",
+    description: "A multi-tower master plan featuring three slender residential towers rising from a lush parkland setting. The towers are staggered in height and orientation, framing views through the site while maximising green space at grade.",
+    metrics: [
+      { label: "Type",   value: "High-Rise" },
+      { label: "Towers", value: "3+"        },
+      { label: "Phase",  value: "SD"        },
+      { label: "Scale",  value: "Master"    },
+    ],
+    image:   "images/Fieldway02.jpeg",
+    palette: ["#1a1e28", "#ddd4c4", "#c4935a", "#222838"],
+    accent:  "#c4935a",
+  },
+  {
+    id: 6,
+    title: "Glen Ave Concept",
+    subtitle: "Sculptural Tower",
+    location: "Toronto, ON",
+    year: "2025",
+    phase: "Concept Design",
+    typology: "High-Rise Residential",
+    description: "An organic, sculptural tower with a spiralling floor plate that rotates subtly as it rises. The sinuous form creates a distinctive silhouette on the skyline, with each unit benefiting from unique views generated by the building's continuous twist.",
+    metrics: [
+      { label: "Type",     value: "High-Rise" },
+      { label: "Form",     value: "Organic"   },
+      { label: "Phase",    value: "Concept"   },
+      { label: "Location", value: "Toronto"   },
+    ],
+    image:   "images/Glen02.png",
+    palette: ["#1e1a16", "#e0cdb8", "#a87040", "#2e2620"],
+    accent:  "#a87040",
+  },
+  {
+    id: 7,
+    title: "The Kingsway",
+    subtitle: "Mid-Rise Residential",
+    location: "Toronto, ON",
+    year: "2022",
+    phase: "Built",
+    typology: "Mid-Rise Residential",
+    description: "A completed mid-rise residential building featuring a bold, stacked massing with projecting balcony slabs that create deep horizontal shadow lines. The warm brick-toned accent panels contrast against the cool precast, giving the facade a layered, rhythmic quality.",
+    metrics: [
+      { label: "Type",     value: "Mid-Rise" },
+      { label: "Status",   value: "Built"    },
+      { label: "Storeys",  value: "8"        },
+      { label: "Location", value: "Toronto"  },
+    ],
+    image:   "images/Kingway08.jpg",
+    palette: ["#1c1820", "#ddd2c8", "#9a6858", "#2a2430"],
+    accent:  "#9a6858",
+  },
+  {
+    id: 8,
+    title: "York Mills",
+    subtitle: "Commercial Mixed-Use",
+    location: "Toronto, ON",
+    year: "2024",
+    phase: "Design Development",
+    typology: "Commercial / Office",
+    description: "A contemporary commercial development positioned along a major arterial, combining glass curtain wall office floors with warm cladding accents. The building engages the street with an activated public plaza, generous retail frontage, and a prominent signage tower element.",
+    metrics: [
+      { label: "Type",     value: "Commercial" },
+      { label: "Use",      value: "Office"     },
+      { label: "Phase",    value: "DD"         },
+      { label: "Location", value: "Toronto"    },
+    ],
+    image:   "images/YM04.jpeg",
+    palette: ["#1a1820", "#e0d0b8", "#c09040", "#282430"],
+    accent:  "#c09040",
+  },
+];
+
+// Build grid lines
+const pgrid = document.getElementById('p-grid');
+[20, 40, 60, 80].forEach(p => {
+  const v = document.createElement('div');
+  v.className = 'p-grid-v';
+  v.style.left = p + '%';
+  pgrid.appendChild(v);
+});
+[25, 50, 75].forEach(p => {
+  const h = document.createElement('div');
+  h.className = 'p-grid-h';
+  h.style.top = p + '%';
+  pgrid.appendChild(h);
+});
+
+// Build nav dots
+let activeIndex = 0;
+const dotsEl = document.getElementById('p-dots');
+PROJECTS.forEach((proj, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'p-dot';
+  btn.setAttribute('aria-label', `View ${proj.title}`);
+  btn.addEventListener('click', () => setProject(i));
+  btn.addEventListener('mouseenter', () => {
+    document.getElementById('p-nav-label').textContent = proj.title;
+  });
+  btn.addEventListener('mouseleave', () => {
+    document.getElementById('p-nav-label').textContent = 'Navigate Projects';
+  });
+  dotsEl.appendChild(btn);
+});
+
+// Scramble animation
+function scramble(el, finalValue, delay = 0) {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-";
+  let frame = 0;
+  const maxFrames = 14;
+  setTimeout(() => {
+    const interval = setInterval(() => {
+      frame++;
+      if (frame >= maxFrames) {
+        el.textContent = finalValue;
+        clearInterval(interval);
+        return;
+      }
+      el.textContent = finalValue
+        .split('')
+        .map((ch, i) =>
+          i < Math.floor((frame / maxFrames) * finalValue.length)
+            ? finalValue[i]
+            : chars[Math.floor(Math.random() * chars.length)]
+        )
+        .join('');
+    }, 40);
+  }, delay);
+}
+
+function applyPalette(p) {
+  const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const portfolio = document.getElementById('portfolio');
+
+  // Background gradient
+  document.getElementById('p-bg').style.background =
+    `linear-gradient(165deg, ${p.palette[0]} 0%, ${p.palette[3]} 40%, ${p.palette[0]} 100%)`;
+
+  // Text color cascades
+  portfolio.style.color = p.palette[1];
+
+  // Accent-driven elements
+  document.querySelectorAll('.p-grid-v, .p-grid-h').forEach(el => {
+    el.style.background = p.accent;
+  });
+
+  document.querySelectorAll('.p-side').forEach(el => {
+    el.style.color = p.palette[2];
+  });
+
+  document.getElementById('p-counter').style.color = p.palette[2];
+  document.getElementById('p-side-right').style.color = p.palette[2];
+
+  // Phase label color
+  document.getElementById('p-phase').style.color = p.accent;
+
+  // Subtitle color
+  document.getElementById('p-subtitle').style.color = p.palette[2];
+
+  // Meta color
+  document.getElementById('p-meta').style.color = p.palette[2];
+
+  // Divider
+  document.getElementById('p-divider').style.backgroundColor = p.accent;
+
+  // Corner markers
+  ['tl','tr','bl','br'].forEach(cls => {
+    document.querySelector(`.p-corner.${cls}`).style.borderColor = `${p.accent}40`;
+  });
+
+  // Image vignette
+  document.getElementById('p-img-vignette').style.background =
+    `radial-gradient(ellipse at center, transparent 50%, ${p.palette[0]}60 100%)`;
+
+  // Shimmer
+  document.getElementById('p-shimmer').style.background =
+    `linear-gradient(90deg, ${p.palette[0]} 0%, ${p.palette[3]} 50%, ${p.palette[0]} 100%)`;
+  document.getElementById('p-shimmer').style.backgroundSize = '200% 100%';
+
+  // Arrows
+  document.querySelectorAll('.p-arrow').forEach(el => {
+    el.style.color = p.palette[1];
+    el.style.borderColor = `${p.accent}30`;
+  });
+
+  // Nav dots
+  document.querySelectorAll('.p-dot').forEach((dot, i) => {
+    dot.style.width   = i === activeIndex ? '48px' : '12px';
+    dot.style.background = i === activeIndex ? p.accent : `${p.palette[1]}30`;
+  });
+
+  // Metric hover vars
+  document.getElementById('p-metrics').style.setProperty &&
+    document.getElementById('portfolio').style.setProperty('--p-metric-hover', `${p.accent}08`);
+
+  // Metric border separator
+  document.querySelectorAll('.p-metric:not(:last-child)').forEach(m => {
+    m.style.borderRight = `1px solid ${p.accent}15`;
+  });
+
+  // Image wrap border
+  document.getElementById('p-image-wrap').style.border = `1px solid ${p.accent}20`;
+
+  // Label color
+  document.getElementById('p-img-label').style.color = p.palette[2];
+  document.getElementById('p-nav-label').style.color = p.palette[2];
+}
+
+function setProject(index) {
+  activeIndex = index;
+  const p = PROJECTS[index];
+
+  // Remove all revealed classes instantly
+  document.querySelectorAll('.p-enter').forEach(el => {
+    el.classList.remove('revealed');
+    el.style.transition = 'none';
+  });
+  document.getElementById('p-meta').classList.remove('revealed');
+  document.getElementById('p-meta').style.transition = 'none';
+
+  // Reset divider
+  document.getElementById('p-divider').style.transition = 'none';
+  document.getElementById('p-divider').style.width = '0';
+
+  // Apply palette immediately
+  applyPalette(p);
+
+  // Update DOM content
+  document.getElementById('p-counter').textContent =
+    `${String(index + 1).padStart(2, '0')} / ${String(PROJECTS.length).padStart(2, '0')}`;
+  document.getElementById('p-side-right').textContent = `${p.location} — ${p.year}`;
+  document.getElementById('p-phase').textContent = p.phase;
+  document.getElementById('p-title').textContent = p.title;
+  document.getElementById('p-subtitle').textContent = `${p.subtitle} — ${p.typology}`;
+  document.getElementById('p-location').textContent = p.location;
+  document.getElementById('p-year').textContent = p.year;
+  document.getElementById('p-description').textContent = p.description;
+
+  // Metrics HTML
+  document.getElementById('p-metrics').innerHTML = p.metrics.map((m, i) => `
+    <div class="p-metric${i < p.metrics.length - 1 ? ' has-border' : ''}">
+      <div class="p-metric-value" data-value="${m.value}">${m.value}</div>
+      <div class="p-metric-label" style="color:${p.palette[2]}">${m.label}</div>
+    </div>
+  `).join('');
+
+  // Style metric borders after render
+  document.querySelectorAll('.p-metric.has-border').forEach(m => {
+    m.style.borderRight = `1px solid ${p.accent}15`;
+  });
+
+  // Image
+  const img     = document.getElementById('p-image');
+  const shimmer = document.getElementById('p-shimmer');
+  img.style.opacity   = '0';
+  img.style.transform = 'scale(1.05)';
+  shimmer.style.animation = 'shimmer 1.5s infinite';
+  shimmer.style.opacity = '1';
+  img.src = p.image;
+  img.onload = () => {
+    shimmer.style.animation = 'none';
+    shimmer.style.opacity = '0';
+    img.style.opacity   = '1';
+    img.style.transform = 'scale(1)';
+  };
+
+  // Trigger entrance with slight delay
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.p-enter').forEach(el => {
+        el.style.transition = '';
+      });
+      document.getElementById('p-meta').style.transition = '';
+
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.p-enter').forEach(el => el.classList.add('revealed'));
+        document.getElementById('p-meta').classList.add('revealed');
+
+        // Divider slide
+        setTimeout(() => {
+          document.getElementById('p-divider').style.transition =
+            'width 1s cubic-bezier(0.22, 1, 0.36, 1), background-color 1.2s ease';
+          document.getElementById('p-divider').style.width = '80px';
+        }, 400);
+
+        // Scramble metrics
+        document.querySelectorAll('.p-metric-value').forEach((el, i) => {
+          scramble(el, el.dataset.value, 600 + i * 80);
+        });
+      });
+    });
+  });
+
+  // Update dots active state
+  document.querySelectorAll('.p-dot').forEach((dot, i) => {
+    dot.style.width      = i === index ? '48px' : '12px';
+    dot.style.background = i === index ? p.accent : `${p.palette[1]}30`;
+  });
+}
+
+// Arrow navigation
+document.getElementById('p-prev').addEventListener('click', () => {
+  setProject((activeIndex - 1 + PROJECTS.length) % PROJECTS.length);
+});
+document.getElementById('p-next').addEventListener('click', () => {
+  setProject((activeIndex + 1) % PROJECTS.length);
+});
+document.getElementById('p-prev').addEventListener('mouseenter', function() {
+  const p = PROJECTS[activeIndex];
+  this.style.opacity = '1';
+  this.style.borderColor = p.accent;
+});
+document.getElementById('p-prev').addEventListener('mouseleave', function() {
+  const p = PROJECTS[activeIndex];
+  this.style.opacity = '0.5';
+  this.style.borderColor = `${p.accent}30`;
+});
+document.getElementById('p-next').addEventListener('mouseenter', function() {
+  const p = PROJECTS[activeIndex];
+  this.style.opacity = '1';
+  this.style.borderColor = p.accent;
+});
+document.getElementById('p-next').addEventListener('mouseleave', function() {
+  const p = PROJECTS[activeIndex];
+  this.style.opacity = '0.5';
+  this.style.borderColor = `${p.accent}30`;
+});
+
+// Keyboard navigation (only when portfolio is in view)
+const portfolioEl = document.getElementById('portfolio');
+let portfolioVisible = false;
+new IntersectionObserver((entries) => {
+  portfolioVisible = entries[0].isIntersecting;
+}, { threshold: 0.3 }).observe(portfolioEl);
+
+document.addEventListener('keydown', (e) => {
+  if (!portfolioVisible) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown')
+    setProject((activeIndex + 1) % PROJECTS.length);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
+    setProject((activeIndex - 1 + PROJECTS.length) % PROJECTS.length);
+});
+
+// Initialise
+setProject(0);
 </script>
 
 </body>
