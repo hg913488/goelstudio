@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoelStudio — Architecture & Design</title>
+<title>Himank Goel — Architectural Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -31,9 +31,9 @@
     --white:   #f0f0f0;
     --casper:  #b0b4ca;
     --dove:    #6b6b6c;
-    --hover:   #1a3858;
-    --active:  #1c4860;
-    --accent:  #3a4a5a;
+    --hover:   rgba(240,240,240,0.07);
+    --active:  rgba(240,240,240,0.12);
+    --accent:  rgba(240,240,240,0.28);
     --ease:    cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -833,6 +833,353 @@
     #p-prev { left: 20px; }
     #p-next { right: 20px; }
   }
+
+  /* ────────────────────────────────────────────────
+     ABOUT SECTION
+  ──────────────────────────────────────────────── */
+
+  #about {
+    position: relative;
+    width: 100%;
+    background: #0d0d0d;
+    padding: 120px 64px 100px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .about-grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .about-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .about-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dove);
+    margin-bottom: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .about-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--dim);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    margin-bottom: 80px;
+  }
+
+  .about-left h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 4.5vw, 72px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .about-title-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dove);
+  }
+
+  .about-location {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 36px;
+  }
+
+  .about-location::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dove);
+    flex-shrink: 0;
+  }
+
+  .about-right p {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 20px;
+    line-height: 1.8;
+    font-weight: 300;
+    color: var(--casper);
+    margin-bottom: 32px;
+  }
+
+  .about-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  .about-skill-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dove);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 7px 16px;
+    border-radius: 2px;
+  }
+
+  .about-exp-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 40px;
+  }
+
+  .about-exp-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .about-exp-card {
+    padding: 32px 40px 32px 0;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .about-exp-card:last-child { border-right: none; padding-right: 0; }
+
+  .about-exp-years {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  .about-exp-role {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .about-exp-company {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dove);
+    margin-bottom: 16px;
+  }
+
+  .about-exp-desc {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--dim);
+    font-weight: 300;
+  }
+
+  /* ────────────────────────────────────────────────
+     CONTACT SECTION
+  ──────────────────────────────────────────────── */
+
+  #contact {
+    position: relative;
+    width: 100%;
+    background: #080808;
+    padding: 100px 64px 80px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .contact-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .contact-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 72px;
+    align-items: end;
+  }
+
+  .contact-top h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 4.5vw, 72px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .contact-avail {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dove);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .contact-avail::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #5a9a5a;
+    flex-shrink: 0;
+  }
+
+  .contact-email-wrap { display: flex; flex-direction: column; justify-content: flex-end; }
+
+  .contact-email {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(20px, 2.5vw, 36px);
+    font-weight: 300;
+    color: var(--casper);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    display: block;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .contact-email:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+  .contact-socials { display: flex; gap: 24px; }
+
+  .contact-social-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .contact-social-link:hover { color: var(--casper); }
+
+  .contact-services {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .contact-service {
+    padding: 20px 24px 20px 0;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .contact-service:last-child { border-right: none; }
+
+  .contact-service-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .contact-service-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--casper);
+    line-height: 1.3;
+  }
+
+  .site-footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 60px;
+  }
+
+  .site-footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+  }
+
+  .site-footer-back {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .site-footer-back:hover { color: var(--casper); }
+
+  @media (max-width: 768px) {
+    #about { padding: 72px 24px 60px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; margin-bottom: 48px; }
+    .about-exp-list { grid-template-columns: 1fr; }
+    .about-exp-card { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 28px 0; }
+    .about-exp-card:last-child { border-bottom: none; }
+
+    #contact { padding: 72px 24px 60px; }
+    .contact-top { grid-template-columns: 1fr; gap: 40px; margin-bottom: 48px; }
+    .contact-services { grid-template-columns: repeat(2, 1fr); }
+    .contact-service { padding: 16px 12px 16px 0; }
+    .contact-service:nth-child(even) { border-right: none; }
+    .site-footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
 </style>
 </head>
 <body>
@@ -847,33 +1194,32 @@
 
   <div id="ui">
     <nav>
-      <a href="#" class="nav-wordmark">GoelStudio</a>
+      <a href="#" class="nav-wordmark">Himank Goel</a>
       <ul class="nav-links">
-        <li><a href="#portfolio">Work</a></li>
-        <li><a href="#">Practice</a></li>
-        <li><a href="#">Process</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
 
     <div class="hero-content">
-      <p class="hero-eyebrow">Architecture &amp; Design Practice</p>
+      <p class="hero-eyebrow">Architectural Designer | Creator</p>
 
       <h1 class="hero-headline">
-        Space is a medium.<br>
-        <em>Use it deliberately.</em>
+        Work I've designed.<br>
+        <em>Spaces I believe in.</em>
       </h1>
 
       <p class="hero-sub">
-        GoelStudio designs buildings, interiors, and urban environments
-        with structural rigor and compositional intent — from the first
-        sketch to the final detail.
+        A collection of projects, drawings, and ideas that reflect how I see
+        and shape space. This portfolio traces my design journey —
+        logic, play, and everything in between.
       </p>
 
       <div class="hero-actions">
         <a href="#portfolio" class="btn-primary"><span>View Selected Work</span></a>
-        <a href="#" class="btn-ghost">
-          Our Practice
+        <a href="#about" class="btn-ghost">
+          About Me
           <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M1 7h12M8 3l4 4-4 4"/>
           </svg>
@@ -882,7 +1228,7 @@
     </div>
 
     <div class="hero-footer">
-      <span class="hero-footer-left">Est. 2026 &nbsp;·&nbsp; Design with Direction and Purpose</span>
+      <span class="hero-footer-left">Toronto &nbsp;·&nbsp; hgoeldesigns@gmail.com</span>
       <a href="#portfolio" class="scroll-indicator">
         <div class="scroll-line"></div>
         Scroll
@@ -907,7 +1253,7 @@
 
   <!-- Header -->
   <header class="p-header">
-    <div class="p-wordmark">GoelStudio</div>
+    <div class="p-wordmark">Himank Goel</div>
     <div class="p-counter" id="p-counter">01 / 08</div>
   </header>
 
@@ -968,7 +1314,7 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 const BG       = new THREE.Color(0x0a0a0a);
 const C_EDGE   = new THREE.Color(0x606060);
 const C_DIM    = new THREE.Color(0x383838);
-const C_ACCENT = new THREE.Color(0x7a9aba);
+const C_ACCENT = new THREE.Color(0xd0d0d0);
 
 const canvas   = document.getElementById('hero-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -1569,6 +1915,110 @@ document.addEventListener('keydown', (e) => {
 // Initialise
 setProject(0);
 </script>
+
+<!-- ════════════════════════════════════════════════
+     ABOUT SECTION
+═════════════════════════════════════════════════ -->
+<section id="about">
+  <div class="about-grain"></div>
+  <div class="about-inner">
+
+    <div class="about-eyebrow">Behind the Name</div>
+
+    <div class="about-grid">
+      <div class="about-left">
+        <h2>Himank Goel</h2>
+        <div class="about-title-label">Architectural Designer | Creator</div>
+        <div class="about-location">Toronto, Canada</div>
+      </div>
+      <div class="about-right">
+        <p>A collection of projects, drawings, and ideas that reflect how I see and shape space. This portfolio traces my design journey — logic, play, and everything in between.</p>
+        <p>I work at the intersection of architecture, technology, and craft — from high-rise towers in Toronto to custom residences, always with a focus on intention and detail.</p>
+        <div class="about-skills">
+          <span class="about-skill-tag">Architectural Design</span>
+          <span class="about-skill-tag">3D Rendering</span>
+          <span class="about-skill-tag">Feasibility Studies</span>
+          <span class="about-skill-tag">Archicad</span>
+          <span class="about-skill-tag">SketchUp</span>
+          <span class="about-skill-tag">Revit</span>
+          <span class="about-skill-tag">Twinmotion</span>
+          <span class="about-skill-tag">AI Tools</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-exp-label">Experience</div>
+    <div class="about-exp-list">
+      <div class="about-exp-card">
+        <div class="about-exp-years">2016 — Present</div>
+        <div class="about-exp-role">Architectural Designer / Project Lead</div>
+        <div class="about-exp-company">TACT Architecture</div>
+        <div class="about-exp-desc">Led design strategy across digital and physical projects, overseeing multidisciplinary teams. Focused on high-rise residential and mixed-use developments across Toronto.</div>
+      </div>
+      <div class="about-exp-card">
+        <div class="about-exp-years">2020 — 2022</div>
+        <div class="about-exp-role">Freelance Designer</div>
+        <div class="about-exp-company">Independent — via Fiverr</div>
+        <div class="about-exp-desc">Comprehensive architectural designs, 2D plans, and 3D visualizations — from detailed floor plans to photorealistic renders tailored to each client's unique needs.</div>
+      </div>
+      <div class="about-exp-card">
+        <div class="about-exp-years">2017 — 2022</div>
+        <div class="about-exp-role">Real Estate Drafting Consultant</div>
+        <div class="about-exp-company">Freelance</div>
+        <div class="about-exp-desc">Precise spatial measurement and drafting services for real estate professionals, enabling accurate property presentations and improved marketing strategies.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     CONTACT SECTION
+═════════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact-inner">
+
+    <div class="contact-top">
+      <div>
+        <h2>Let's build something.</h2>
+        <div class="contact-avail">One spot available &nbsp;·&nbsp; Taking new projects</div>
+      </div>
+      <div class="contact-email-wrap">
+        <a href="mailto:hgoeldesigns@gmail.com" class="contact-email">hgoeldesigns@gmail.com</a>
+        <div class="contact-socials">
+          <a href="https://www.instagram.com/" class="contact-social-link" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.linkedin.com/" class="contact-social-link" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://twitter.com/" class="contact-social-link" target="_blank" rel="noopener">Twitter / X</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-services">
+      <div class="contact-service">
+        <div class="contact-service-label">01</div>
+        <div class="contact-service-name">House & Custom Residence Design</div>
+      </div>
+      <div class="contact-service">
+        <div class="contact-service-label">02</div>
+        <div class="contact-service-name">Condo & Apartment Design</div>
+      </div>
+      <div class="contact-service">
+        <div class="contact-service-label">03</div>
+        <div class="contact-service-name">Feasibility Studies</div>
+      </div>
+      <div class="contact-service">
+        <div class="contact-service-label">04</div>
+        <div class="contact-service-name">3D Rendering & Visualization</div>
+      </div>
+    </div>
+
+    <div class="site-footer">
+      <span class="site-footer-copy">© 2026 Himank Goel — All rights reserved</span>
+      <a href="#" class="site-footer-back">↑ Back to top</a>
+    </div>
+
+  </div>
+</section>
 
 </body>
 </html>
